@@ -4,6 +4,7 @@ from flask import redirect, render_template, request, session
 from werkzeug.security import check_password_hash, generate_password_hash
 import config 
 import db
+import books
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
@@ -18,12 +19,21 @@ def new_book():
 
 @app.route("/create_book", methods=["POST"])
 def create_book():
+
+    if "user_id" not in session:
+        return redirect("/login")
+
     title = request.form["title"]
     author = request.form["author"]
     user_id = session["user_id"]
 
-    sql = "INSERT INTO books (title, author, user_id) VALUES (?, ?, ?)"
-    db.execute(sql, [title, author, user_id])
+    if len(title.strip()) == 0:
+        return "VIRHE: kirjan nimi puuttuu"
+
+    if len(author.strip()) == 0:
+        return "VIRHE: kirjailijan nimi puttuu"
+
+    books.add_book(title, author, user_id)
 
     return redirect("/")
 
@@ -36,6 +46,9 @@ def create():
     username = request.form["username"]
     password1 = request.form["password1"]
     password2 = request.form["password2"]
+
+    if len(username) <= 2:
+        return "VIRHE: tunnus on liian lyhyt"
     if password1 != password2:
         return "VIRHE: salasanat eivät ole samat"
     password_hash = generate_password_hash(password1)
@@ -46,7 +59,7 @@ def create():
     except sqlite3.IntegrityError:
         return "VIRHE: tunnus on jo varattu"
 
-    return "Tunnus luotu"
+    return redirect("/login")
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
@@ -59,6 +72,9 @@ def login():
         
         sql = "SELECT id, password_hash FROM users WHERE username = ?"
         result = db.query(sql, [username])[0]
+
+        if len(result) == 0:
+            return "VIRHE: väärä tunnus tai salasana"
         user_id = result["id"]
         password_hash = result["password_hash"]
 
