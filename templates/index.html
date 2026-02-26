@@ -24,6 +24,19 @@
   <p>
     <a href="/new_book">Uusi kirja</a>
   </p>
+
+  <h2>Kirjasto</h2>
+
+  {% if books %}
+    </ul>
+      {% for book in books %}
+      <li><a href="/book/{{ book.id }}">{{ book.title }} - {{ book.author }}</a></li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>Kirjasto näyttää olevan tyhjä. Ole ensimmäinen ja lisää kirja!</p>
+  {% endif %}
+
 </body>
 
 </html>
