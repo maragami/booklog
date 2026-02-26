@@ -10,6 +10,7 @@
   {% if session.user_id  == book.user_id %}
   <p>
     <a href="/edit_book/{{ book.id }}">Muokkaa</a>
+    <a href="/remove_book/{{ book.id }}">Poista</a>
   {% endif %}
   <p>
     Kirjailija: {{ book.author }}
