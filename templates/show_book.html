@@ -7,6 +7,10 @@
 
 <body>
   <h1>{{ book.title }}</h1>
+  {% if session.user_id  == book.user_id %}
+  <p>
+    <a href="/edit_book/{{ book.id }}">Muokkaa</a>
+  {% endif %}
   <p>
     Kirjailija: {{ book.author }}
   </p>
