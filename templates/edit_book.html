@@ -17,6 +17,7 @@
       <input type="text" name="author" value="{{ book.author }}" />
     </p>
     <input type="hidden" name="book_id" value="{{ book.id }}" />
+    <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="Tallenna muutokset" />
   </form>
 </body>

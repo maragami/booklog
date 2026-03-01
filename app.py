@@ -1,6 +1,7 @@
 import sqlite3
 from flask import Flask
 from flask import redirect, render_template, request, session, abort
+import secrets
 from werkzeug.security import check_password_hash, generate_password_hash
 import config 
 import db
@@ -9,6 +10,10 @@ import books
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+def check_csrf():
+    if request.form["csrf_token"] != session["csrf_token"]:
+        abort(403)
 
 @app.route("/")
 def index():
@@ -30,6 +35,7 @@ def user_page(user_id):
 def add_review(book_id):
     if "user_id" not in session:
         return redirect("/login")
+    check_csrf()
 
     rating = request.form["rating"]
     comment = request.form["comment"]
@@ -64,7 +70,7 @@ def create_book():
 
     if "user_id" not in session:
         return redirect("/login")
-
+    check_csrf()
     title = request.form["title"]
     author = request.form["author"]
     user_id = session["user_id"]
@@ -88,11 +94,12 @@ def edit_book(book_id):
 
 @app.route("/update_book", methods=["POST"])
 def update_book():
+    check_csrf()
     book_id = request.form["book_id"]
     book = books.get_book(book_id)
     if book["user_id"] != session["user_id"]:
         abort(403)
-        
+
     new_title = request.form["title"]
     new_author = request.form["author"]
 
@@ -110,6 +117,7 @@ def remove_book(book_id):
         return render_template("remove_book.html", book= book)
     
     if request.method == "POST":
+        check_csrf()
         if "remove" in request.form:
             books.remove_book(book_id)
             return redirect("/")
@@ -161,6 +169,7 @@ def login():
         if check_password_hash(password_hash, password):
             session["user_id"] = user_id
             session["username"] = username
+            session["csrf_token"] = secrets.token_hex(16)
             return redirect("/")
         else:
             return "VIRHE: väärä tunnus tai salasana"
