@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <link rel="stylesheet" href="/static/main.css">
   <title>Kirjautuminen</title>
 </head>
 
@@ -16,11 +17,11 @@
   {% else %}
   <form action="/login" method="post">
     <p>
-      Tunnus: <br />
+      <label for="username">Tunnus:</label> <br />
       <input type="text" name="username" />
     </p>
     <p>
-      Salasana: <br />
+      <label for="password">Salasana:</label> <br />
       <input type="password" name="password" />
     </p>
     <input type="submit" value="Kirjaudu" />

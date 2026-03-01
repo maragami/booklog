@@ -33,6 +33,9 @@ def update_book(book_id, new_title, new_author):
     db.execute(sql, [new_title, new_author, book_id])
 
 def remove_book(book_id):
+    sql_categories = "DELETE FROM book_categories WHERE book_id = ?"
+    db.execute(sql_categories, [book_id])
+
     sql_reviews = "DELETE FROM reviews WHERE book_id = ?"
     db.execute(sql_reviews, [book_id])
 

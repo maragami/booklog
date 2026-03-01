@@ -2,6 +2,7 @@
 <html>
 
 <head>
+  <link rel="stylesheet" href="/static/main.css">
   <title>Uusi kirja</title>
 </head>
 
@@ -9,11 +10,11 @@
   <h1>Uusi kirja</h1>
   <form action="/create_book" method="post">
     <p>
-      Kirjan nimi: <br />
+      <label for="title">Kirjan nimi:</label> <br />
       <input type="text" name="title" />
     </p>
     <p>
-      Kirjailija: <br />
+      <label for="author">Kirjailija:</label> <br />
       <input type="text" name="author" />
     </p>
     <p>
