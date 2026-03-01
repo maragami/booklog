@@ -96,3 +96,13 @@ def get_image(user_id):
     sql = "SELECT image FROM users WHERE id = ?"
     result = db.query(sql, [user_id])
     return result[0]["image"] if result and result[0]["image"] else None
+
+def get_book_count():
+    sql = "SELECT COUNT (*)FROM books"
+    result = db.query(sql)
+    return result[0][0] if result else 0
+
+def get_books_paginated(page, page_size):
+    offset = page_size * (page - 1)
+    sql = "SELECT id, title, author FROM books ORDER BY id DESC LIMIT ? OFFSET ?"
+    return db.query(sql, [page_size, offset])

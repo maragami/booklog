@@ -42,6 +42,12 @@
   {% else %}
     <p>Kirjasto näyttää olevan tyhjä. Ole ensimmäinen ja lisää kirja!</p>
   {% endif %}
+  <hr>
+  <p>
+      <a href="/page/{{ page - 1 }}">&lt;&lt; Edellinen</a>
+      | Sivu {{ page }}/{{ page_count }} |
+      <a href="/page/{{ page + 1 }}">Seuraava &gt;&gt;</a>
+  </p>
 
 </body>
 

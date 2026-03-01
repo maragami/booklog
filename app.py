@@ -1,7 +1,9 @@
 import sqlite3
 import secrets
+import math
+import time
 from flask import Flask
-from flask import redirect, render_template, request, session, abort, make_response
+from flask import redirect, render_template, request, session, abort, make_response, g
 from werkzeug.security import check_password_hash, generate_password_hash
 import config
 import db
@@ -10,6 +12,16 @@ import books
 
 app = Flask(__name__)
 app.secret_key = config.secret_key
+
+@app.before_request
+def before_request():
+    g.start_time = time.time()
+
+@app.after_request
+def after_request(response):
+    elapsed_time = round(time.time() - g.start_time, 2)
+    print("elapsed time:", elapsed_time, "s")
+    return response
 
 def check_csrf():
     if request.form["csrf_token"] != session["csrf_token"]:
@@ -20,9 +32,20 @@ def check_login():
         abort(403)
 
 @app.route("/")
-def index():
-    all_books = books.get_all_books()
-    return render_template("index.html", books= all_books)
+@app.route("/page/<int:page>")
+def index(page=1):
+    page_size= 10
+    book_count = books.get_book_count()
+    page_count = math.ceil(book_count / page_size)
+    page_count = max(page_count, 1)
+
+    if page < 1:
+        return redirect("/1")
+    if page > page_count:
+        return redirect("/" + str(page_count))
+    
+    all_books = books.get_books_paginated(page, page_size)
+    return render_template("index.html", books= all_books, page=page, page_count=page_count)
 
 @app.route("/user/<int:user_id>")
 def user_page(user_id):

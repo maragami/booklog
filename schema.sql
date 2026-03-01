@@ -38,3 +38,5 @@ INSERT INTO categories (name) VALUES ("Jännitys");
 INSERT INTO categories (name) VALUES ("Manga");
 INSERT INTO categories (name) VALUES ("Kauhu");
 INSERT INTO categories (name) VALUES ("Romantiikka");
+
+CREATE INDEX idx_books_id ON books (id);
