@@ -18,6 +18,40 @@
   <p>
     Käyttäjältä: <a href="/user/{{ book.user_id }}">{{ book.username }}</a>
   </p>
+  <hr>
+<h2>Arvostelut</h2>
+
+{% if reviews %}
+    <ul>
+    {% for review in reviews %}
+        <li>
+            <strong>{{ review.username }}</strong> antoi {{ review.rating }}/5 tähteä.<br>
+            "{{ review.comment }}"
+        </li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>Ei vielä arvosteluja. Ole ensimmäinen!</p>
+{% endif %}
+
+<hr>
+
+{% if session.user_id %}
+    <h3>Jätä arvostelu</h3>
+    <form action="/add_review/{{ book.id }}" method="post">
+        <p>
+            Arvosana (1-5):<br>
+            <input type="number" name="rating" min="1" max="5" required>
+        </p>
+        <p>
+            Kommentti:<br>
+            <textarea name="comment" rows="4" cols="50" required></textarea>
+        </p>
+        <input type="submit" value="Lähetä arvostelu">
+    </form>
+{% else %}
+    <p><a href="/login">Kirjaudu sisään</a> jättääksesi arvostelun.</p>
+{% endif %}
   <p>
     <a href="/">Palaa etusivulle</a>
   </p>

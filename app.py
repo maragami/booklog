@@ -25,6 +25,19 @@ def user_page(user_id):
 
     return render_template("user.html", user=user, books=user_books, count=book_count)
 
+@app.route("/add_review/<int:book_id>", methods=["POST"])
+def add_review(book_id):
+    if "user_id" not in session:
+        return redirect("/login")
+
+    rating = request.form["rating"]
+    comment = request.form["comment"]
+    user_id = session["user_id"]
+
+    books.add_review(book_id, user_id, rating, comment)
+
+    return redirect("/book/" + str(book_id))
+
 @app.route("/find_book")
 def find_book():
     query = request.args.get("query")
@@ -38,7 +51,8 @@ def find_book():
 @app.route("/book/<int:book_id>")
 def show_book(book_id):
     book = books.get_book(book_id)
-    return render_template("show_book.html", book= book)
+    reviews= books.get_reviews(book_id)
+    return render_template("show_book.html", book= book, reviews=reviews)
 
 @app.route("/new_book")
 def new_book():

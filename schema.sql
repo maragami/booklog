@@ -10,3 +10,11 @@ CREATE TABLE books (
     author TEXT,
     user_id INTEGER REFERENCES users
 );
+
+CREATE TABLE reviews (
+    id INTEGER PRIMARY KEY,
+    book_id INTEGER REFERENCES books,
+    user_id INTEGER REFERENCES users,
+    rating INTEGER,
+    comment TEXT
+);

@@ -49,3 +49,14 @@ def get_user_by_id(user_id):
 def get_books_by_user(user_id):
     sql = "SELECT id, title, author FROM books WHERE user_id = ? ORDER BY id DESC"
     return db.query(sql,[user_id])
+
+def add_review(book_id, user_id, rating, comment):
+    sql = "INSERT INTO reviews (book_id, user_id, rating, comment) VALUES (?, ?, ?, ?)"
+    db.execute(sql, [book_id, user_id, rating, comment])
+
+def get_reviews(book_id):
+    sql = """SELECT reviews.rating, reviews.comment, users.username
+             FROM reviews, users
+             WHERE reviews.user_id = users.id AND reviews.book_id = ?
+             ORDER BY reviews.id DESC"""
+    return db.query(sql,[book_id])
