@@ -38,3 +38,14 @@ def find_book(query):
              ORDER BY id DESC"""
     like = "%" + query + "%"
     return db.query(sql, [like, like])
+
+def get_user_by_id(user_id):
+    sql = "SELECT id, username FROM users WHERE id = ?"
+    result = db.query(sql,[user_id])
+    if len(result) > 0:
+        return result[0]
+    return None
+
+def get_books_by_user(user_id):
+    sql = "SELECT id, title, author FROM books WHERE user_id = ? ORDER BY id DESC"
+    return db.query(sql,[user_id])

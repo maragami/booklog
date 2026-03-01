@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Käyttäjän {{ user.username }} profiili</title>
+</head>
+
+<body>
+  <h1>Käyttäjä: {{ user.username }}</h1>
+
+  <hr>
+  <h2>Tilastot</h2>
+  <p>Lisättyjä kirjoja yhteensä: <strong>{{ count }}</strong></p>
+
+  <h2>Käyttäjän lisäämät kirjat</h2>
+  {% if books %}
+      <ul>
+        {% for book in books %}
+            <li><a href="/book/{{ book.id }}">{{ book.title }} - {{ book.author }}</a></li>
+        {% endfor %}
+      </ul>
+  {% else %}
+      <p>Tämä käyttäjä ei ole vielä lisännyt kirjoja.</p>
+  {% endif %}
+
+  <br>
+  <p>
+    <a href="/">Palaa etusivulle</a>
+  </p>
+</body>
+
+</html>

@@ -14,6 +14,17 @@ def index():
     all_books = books.get_all_books()
     return render_template("index.html", books= all_books)
 
+@app.route("/user/<int:user_id>")
+def user_page(user_id):
+    user = books.get_user_by_id(user_id)
+    if user is None:
+        return "Käyttäjää ei löytynyt", 404
+    
+    user_books = books.get_books_by_user(user_id)
+    book_count = len(user_books)
+
+    return render_template("user.html", user=user, books=user_books, count=book_count)
+
 @app.route("/find_book")
 def find_book():
     query = request.args.get("query")
@@ -22,7 +33,7 @@ def find_book():
     else:
         query = ""
         results = []
-    return render_template("find_book.html", query=query, results = results)
+    return render_template("find_book.html", query=query, results=results)
 
 @app.route("/book/<int:book_id>")
 def show_book(book_id):
