@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Etsi kirja tai kirjailija</title>
+</head>
+
+<body> 
+  <h1>Etsi kirja tai kirjailija</h1> 
+
+  <form action="/find_book" method="get">
+  <p>
+    Hakusana: <input type ="text" name="query" value="{{ query }}">
+  </p>
+  <input type ="submit" value="Lähetä">
+  </form>
+
+  <p>
+    <a href="/">Takaisin</a>
+  </p>
+
+  {% if query %}
+  <h2>Tulokset</h2>
+
+  <ul>
+    {% for book in results %}
+    <li><a href="/book/{{ book.id }}">{{ book.title }} - {{ book.author }}</a></li>
+    {% endfor %}
+  </ul>
+  {% endif %}
+</body>
+
+</html>

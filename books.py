@@ -28,5 +28,13 @@ def update_book(book_id, new_title, new_author):
 
 def remove_book(book_id):
     sql = "DELETE FROM books WHERE id = ?"
-    
+
     db.execute(sql, [book_id])
+
+def find_book(query):
+    sql = """SELECT id, title, author
+             FROM books
+             WHERE title LIKE ? OR author LIKE ?
+             ORDER BY id DESC"""
+    like = "%" + query + "%"
+    return db.query(sql, [like, like])
