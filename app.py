@@ -1,9 +1,9 @@
 import sqlite3
-from flask import Flask
-from flask import redirect, render_template, request, session, abort
 import secrets
+from flask import Flask
+from flask import redirect, render_template, request, session, abort, make_response
 from werkzeug.security import check_password_hash, generate_password_hash
-import config 
+import config
 import db
 import books
 
@@ -34,6 +34,37 @@ def user_page(user_id):
     book_count = len(user_books)
 
     return render_template("user.html", user=user, books=user_books, count=book_count)
+
+@app.route("/add_image", methods=["GET", "POST"])
+def add_image():
+    check_login()
+
+    if request.method == "GET":
+        return render_template("add_image.html")
+
+    if request.method == "POST":
+        check_csrf()
+        file = request.files["image"]
+        if not file.filename.endswith(".jpg"):
+            return "VIRHE: väärä tiedostomuoto"
+
+        image = file.read()
+        if len(image) > 100 * 1024:
+            return "VIRHE: liian suuri kuva"
+
+        user_id = session["user_id"]
+        books.update_image(user_id, image)
+        return redirect("/user/" + str(user_id))
+
+@app.route("/image/<int:user_id>")
+def show_image(user_id):
+    image = books.get_image(user_id)
+    if not image:
+        abort(404)
+
+    response = make_response(bytes(image))
+    response.headers.set("Content-Type", "image/jpeg")
+    return response
 
 @app.route("/add_review/<int:book_id>", methods=["POST"])
 def add_review(book_id):

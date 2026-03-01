@@ -48,11 +48,10 @@ def find_book(query):
     return db.query(sql, [like, like])
 
 def get_user_by_id(user_id):
-    sql = "SELECT id, username FROM users WHERE id = ?"
+    sql = """SELECT id, username, image IS NOT NULL AS has_image 
+            FROM users WHERE id = ?"""
     result = db.query(sql,[user_id])
-    if len(result) > 0:
-        return result[0]
-    return None
+    return result[0] if result else None
 
 def get_books_by_user(user_id):
     sql = "SELECT id, title, author FROM books WHERE user_id = ? ORDER BY id DESC"
@@ -84,3 +83,13 @@ def get_book_categories(book_id):
             AND book_categories.book_id = ?
             ORDER BY categories.name"""
     return db.query(sql, [book_id])
+
+def update_image(user_id, image):
+    sql = "UPDATE users SET image = ? WHERE id = ?"
+    db.execute(sql, [image, user_id])
+
+
+def get_image(user_id):
+    sql = "SELECT image FROM users WHERE id = ?"
+    result = db.query(sql, [user_id])
+    return result[0]["image"] if result and result[0]["image"] else None

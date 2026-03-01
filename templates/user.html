@@ -7,7 +7,15 @@
 
 <body>
   <h1>Käyttäjä: {{ user.username }}</h1>
+{% if user.has_image %}
+        <p>
+            <img src="/image/{{ user.id }}" alt="Profiilikuva" style="max-width: 200px; border-radius: 10px;">
+        </p>
+    {% endif %}
 
+    {% if session.user_id == user.id %}
+        <p><a href="/add_image">Lisää tai vaihda profiilikuva</a></p>
+    {% endif %}
   <hr>
   <h2>Tilastot</h2>
   <p>Lisättyjä kirjoja yhteensä: <strong>{{ count }}</strong></p>

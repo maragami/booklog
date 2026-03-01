@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <title>Lisää profiilikuva</title>
+</head>
+
+<body>
+  <h1>Päivitä profiilikuva</h1>
+<form action="/add_image" method="post" enctype="multipart/form-data">
+        <p>
+            Valitse kuva (vain .jpg):<br>
+            <input type="file" name="image" accept=".jpg" required>
+        </p>
+        
+        <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
+        <input type="submit" value="Lähetä kuva">
+    </form>
+    
+    <p><a href="/user/{{ session.user_id }}">Palaa takaisin profiiliin</a></p>
+</body>
+
+</html>
