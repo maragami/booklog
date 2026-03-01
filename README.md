@@ -45,3 +45,15 @@ Käynnistä sovellus:
 ```bash
 $ flask run
 ```
+
+## Suuren tietomäärän testaaminen
+Sovellusta on testattu 10 000 kirjan tietomäärällä suorituskyvyn varmistamiseksi. Voit generoida testidatan ajamalla:
+
+```bash
+python3 seed.py
+```
+
+### Laadunvarmistus
+- Koodin tyyli on tarkistettu Pylintillä.
+- Erillinen raportti huomioista löytyy tiedostosta `pylint-report.md`.
+- Lomakkeet on varustettu `<label>`-elementeillä saavutettavuuden parantamiseksi.
