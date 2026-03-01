@@ -59,6 +59,8 @@ def find_book():
 def show_book(book_id):
     book = books.get_book(book_id)
     reviews= books.get_reviews(book_id)
+    if not book:
+        abort(404)
     return render_template("show_book.html", book= book, reviews=reviews)
 
 @app.route("/new_book")
@@ -88,6 +90,8 @@ def create_book():
 @app.route("/edit_book/<int:book_id>")
 def edit_book(book_id):
     book = books.get_book(book_id)
+    if not book:
+        abort(404)
     if book["user_id"] != session["user_id"]:
         abort(403)
     return render_template("edit_book.html", book= book)
@@ -97,6 +101,8 @@ def update_book():
     check_csrf()
     book_id = request.form["book_id"]
     book = books.get_book(book_id)
+    if not book:
+        abort(404)
     if book["user_id"] != session["user_id"]:
         abort(403)
 
@@ -110,6 +116,8 @@ def update_book():
 @app.route("/remove_book/<int:book_id>", methods=["GET", "POST"])
 def remove_book(book_id):
     book = books.get_book(book_id)
+    if not book:
+        abort(404)
     if book["user_id"] != session["user_id"]:
         abort(403)
     
