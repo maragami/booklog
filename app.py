@@ -15,6 +15,10 @@ def check_csrf():
     if request.form["csrf_token"] != session["csrf_token"]:
         abort(403)
 
+def check_login():
+    if "user_id" not in session:
+        abort(403)
+
 @app.route("/")
 def index():
     all_books = books.get_all_books()
@@ -65,14 +69,14 @@ def show_book(book_id):
 
 @app.route("/new_book")
 def new_book():
+    check_login()
     return render_template("new_book.html")
 
 @app.route("/create_book", methods=["POST"])
 def create_book():
-
-    if "user_id" not in session:
-        return redirect("/login")
+    check_login()
     check_csrf()
+
     title = request.form["title"]
     author = request.form["author"]
     user_id = session["user_id"]
@@ -89,6 +93,7 @@ def create_book():
 
 @app.route("/edit_book/<int:book_id>")
 def edit_book(book_id):
+    check_login()
     book = books.get_book(book_id)
     if not book:
         abort(404)
@@ -98,6 +103,7 @@ def edit_book(book_id):
 
 @app.route("/update_book", methods=["POST"])
 def update_book():
+    check_login()
     check_csrf()
     book_id = request.form["book_id"]
     book = books.get_book(book_id)
@@ -115,6 +121,7 @@ def update_book():
 
 @app.route("/remove_book/<int:book_id>", methods=["GET", "POST"])
 def remove_book(book_id):
+    check_login()
     book = books.get_book(book_id)
     if not book:
         abort(404)
@@ -185,6 +192,7 @@ def login():
 
 @app.route("/logout")
 def logout():
-    del session["user_id"]
-    del session["username"]
+    if "user_id" in session:
+        del session["user_id"]
+        del session["username"]
     return redirect("/")
