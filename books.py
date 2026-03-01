@@ -1,8 +1,13 @@
 import db
 
 def add_book(title, author, user_id):
-    sql = """INSERT INTO books (title, author, user_id) VALUES (?, ?, ?)"""
+    sql = "INSERT INTO books (title, author, user_id) VALUES (?, ?, ?)"
     db.execute(sql, [title, author, user_id])
+
+    sql_get_id = "SELECT id FROM books WHERE user_id = ? ORDER BY id DESC LIMIT 1"
+    result = db.query(sql_get_id, [user_id])
+
+    return result[0][0]
 
 def get_all_books():
     sql = "SELECT id, title, author FROM books ORDER BY id DESC"
@@ -63,3 +68,19 @@ def get_reviews(book_id):
              WHERE reviews.user_id = users.id AND reviews.book_id = ?
              ORDER BY reviews.id DESC"""
     return db.query(sql,[book_id])
+
+def get_categories():
+    sql = "SELECT id, name FROM categories ORDER BY name"
+    return db.query(sql)
+
+def add_category_to_book(book_id, category_id):
+    sql = "INSERT INTO book_categories (book_id, category_id) VALUES (?, ?)"
+    db.execute(sql, [book_id, category_id])
+
+def get_book_categories(book_id):
+    sql = """SELECT categories.name
+            FROM categories, book_categories
+            WHERE categories.id = book_categories.category_id
+            AND book_categories.book_id = ?
+            ORDER BY categories.name"""
+    return db.query(sql, [book_id])

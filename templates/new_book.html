@@ -16,6 +16,15 @@
       Kirjailija: <br />
       <input type="text" name="author" />
     </p>
+    <p>
+      Valitse kategoriat:<br>
+      {% for category in categories %}
+        <label>
+          <input type="checkbox" name="categories" value="{{ category.id }}">
+          {{ category.name }}
+        </label><br>
+      {% endfor %}
+    </p>
     <input type="hidden" name="csrf_token" value="{{ session.csrf_token }}">
     <input type="submit" value="Lisää kirja" />
   </form>

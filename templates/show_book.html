@@ -18,6 +18,16 @@
   <p>
     Käyttäjältä: <a href="/user/{{ book.user_id }}">{{ book.username }}</a>
   </p>
+<p>
+    Kategoriat: 
+    {% if categories %}
+        {% for category in categories %}
+            {{ category.name }}{% if not loop.last %}, {% endif %}
+        {% endfor %}
+    {% else %}
+        Ei kategorioita.
+    {% endif %}
+</p>
   <hr>
 <h2>Arvostelut</h2>
 

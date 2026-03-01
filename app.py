@@ -63,14 +63,17 @@ def find_book():
 def show_book(book_id):
     book = books.get_book(book_id)
     reviews= books.get_reviews(book_id)
+    categories = books.get_book_categories(book_id)
+
     if not book:
         abort(404)
-    return render_template("show_book.html", book= book, reviews=reviews)
+    return render_template("show_book.html", book= book, reviews=reviews, categories=categories)
 
 @app.route("/new_book")
 def new_book():
     check_login()
-    return render_template("new_book.html")
+    categories = books.get_categories()
+    return render_template("new_book.html", categories=categories)
 
 @app.route("/create_book", methods=["POST"])
 def create_book():
@@ -81,13 +84,18 @@ def create_book():
     author = request.form["author"]
     user_id = session["user_id"]
 
+    category_ids = request.form.getlist("categories")
+
     if len(title.strip()) == 0:
         return "VIRHE: kirjan nimi puuttuu"
 
     if len(author.strip()) == 0:
         return "VIRHE: kirjailijan nimi puttuu"
 
-    books.add_book(title, author, user_id)
+    book_id = books.add_book(title, author, user_id)
+
+    for category_id in category_ids:
+        books.add_category_to_book(book_id, category_id)
 
     return redirect("/")
 
