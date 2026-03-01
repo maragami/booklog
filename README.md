@@ -18,28 +18,30 @@
 Kloonaa repositorio omalle koneellesi:
 
 
+```bash
 $ git clone git@github.com:maragami/booklog.git
-
+```
 Siirry hakemistoon:
-
+```bash
 $ cd booklog
-
+```
 Luo virtuaaliympäristö:
-
+```bash
 $ python3 -m venv venv
-
+```
 Aktivoi virtuaaliympäristö:
-
+```bash
 $ source venv/bin/activate
-
+```
 Asenna tarvittavat kirjastot:
-
+```bash
 $ pip install Flask
-
+```
 Luo tietokannan taulut:
-
+```bash
 $ sqlite3 database.db < schema.sql
-
+```
 Käynnistä sovellus:
-
+```bash
 $ flask run
+```
